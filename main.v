@@ -222,9 +222,22 @@ fn highlight(txt string, lang Lang) string {
 	return out
 }
 
+fn get_lang(lang string) !Lang {
+	if lang == "c" || lang == "C" {
+		return .c
+	}
+	if lang == "cpp" || lang == "CPP" || lang == "C++" ||lang == "c++" || lang == "Cpp" {
+		return .cpp
+	}
+	if lang == "v" || lang == "V" {
+		return .v
+	}
+	return error("Invalid language!")
+}
+
 fn main() {
 	if os.args.len < 3 {
-		println("Invalid usage! Usage: highl -l[language] (-f|-s) text")
+		println("Invalid usage! Usage: highl -l[language] (-f|-s|-i) text")
 		return
 	}
 
@@ -243,17 +256,14 @@ fn main() {
 	else if typ == "-s" {
 		text = x
 	}
-	else {
+	else if typ == "-i" {
+
+	}
+ 	else {
 		println("Invalid type!")
 		return
 	}
 
-	match lang {
-		"C", "c" { println(highlight(text, .c)) }
-		"C++", "CPP", "cpp" { println(highlight(text, .cpp)) }
-		"v", "V" { println(highlight(text, .v)) }
-		else {
-			println("No syntax highlighting for language!\nSupported: c, v, cpp")
-		}
-	}
+	l := get_lang(lang)!
+	println(highlight(text, l))
 }
